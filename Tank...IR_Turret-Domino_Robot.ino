@@ -17,17 +17,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-// #define IR_LEFT 0xF708FF00
-// #define IR_RIGHT 0xA55AFF00
-// #define IR_FORWARD 0xE718FF00
-// #define IR_HOLD 0
-// #define IR_BACKWARD 0xAD52FF00
-// #define IR_ONE 0xBA45FF00
-// #define IR_TWO 0xB946FF00
-// #define IR_OK 3810328320
-// #define IR_SEVEN 4161273600
-// #define IR_EIGHT 3927310080
-
 #define DECODE_NEC  //defines the type of IR transmission to decode based on the remote. See IRremote library for examples on how to decode other types of remote
 
 //defines the specific command code for each button on the remote
@@ -175,33 +164,15 @@ void loop() {
 
   // Update servo if it's changed
   if (true) {
-
-    // Serial.println(servoRight);
-
-    // if (servoRight) {
-    //   pulseServoRight();
-    // } else {
-    //   pulseServoLeft();
-    // }
-
-    // lastServoRight = servoRight;
+          
   }
 
   bool holding = true;
   //if (irrecv.decode()) {
     if(IrReceiver.decode()) {
     commandReceived = true;
-    // unsigned long irCode = irrecv.decodedIRData.decodedRawData;
+    
     unsigned long irCode = IrReceiver.decodedIRData.decodedRawData;
-    // holding = irCode == IR_HOLD;
-
-    // // Serial.println(irrecv.decodedIRData.decodedRawData);
-    // Serial.println(IrReceiver.decodedIRData.decodedRawData);
-      
-    // // If holding, use the last read command
-    // if (holding) {
-    //   irCode = lastValidCommand;
-    // }
 
     // Update the last command time whenever a command is received
     lastCommandTime = millis();
@@ -278,7 +249,7 @@ void loop() {
       lastValidCommand = validCode;
     }
 
-    //irrecv.resume(); // Prepare for the next command
+    // Prepare for the next command
     IrReceiver.resume();
   }
 
@@ -291,16 +262,6 @@ void loop() {
     stopCar();
     holding = false;
     commandReceived = true;
-  }
-  
-  if ((distanceSinceLastDrop >= DISPENSE_DISTANCE) && !dominoDropped && !raceMode) {              //if we've travelled far enough and a domino hasn't been dropped yet
-      servoRight = true;
-      distanceSinceLastDrop = 0;
-      dominoDropped = true;                        //domino has been dropped
-    
-  } else if ((distanceSinceLastDrop >= 0.7 * DISPENSE_DISTANCE) && dominoDropped && !raceMode) {  //if a domino was dropped and we're far enough away to close the domino gate without jamming
-    servoRight = false;
-    dominoDropped = false;                                                           //we haven't dropped the new domino, so now this is false
   }
 
 
@@ -340,60 +301,6 @@ void driveBackward() {
   leftMotorSpeed = 0;
   rightMotorSpeed = 0;
 }
-
-// void pulseServoRight() {
-//   // Serial.println("PulseServoRight");
-//   unsigned long startTime;
-//   unsigned long pulseWidth = SERVO_MIN_PULSE; // Duration of the pulse in microseconds
-//   unsigned long period = PULSE_INTERVAL; // Total period duration in microseconds (20ms)
-
-//   // Start the pulse
-//   digitalWrite(SERVO_PIN, HIGH);
-//   startTime = micros(); // Record the start time
-
-//   // Wait for the pulse width duration
-//   while (micros() - startTime < pulseWidth) {
-//     // This loop waits until 2400 microseconds have passed since startTime
-//   }
-
-//   // End the pulse
-//   digitalWrite(SERVO_PIN, LOW);
-//   // Note: at this point, the time elapsed is roughly equal to pulseWidth
-
-//   // Wait for the rest of the period to complete the 20ms cycle
-//   while (micros() - startTime < period) {
-//     // This loop waits until 20000 microseconds have passed since startTime
-//   }
-
-//   // The function will return here, right after the 20ms period has finished
-// }
-
-// void pulseServoLeft() {
-//   // Serial.println("PulseServoLeft");
-//   unsigned long startTime;
-//   unsigned long pulseWidth = SERVO_MAX_PULSE; // Duration of the pulse in microseconds
-//   unsigned long period = PULSE_INTERVAL; // Total period duration in microseconds (20ms)
-
-//   // Start the pulse
-//   digitalWrite(SERVO_PIN, HIGH);
-//   startTime = micros(); // Record the start time
-
-//   // Wait for the pulse width duration
-//   while (micros() - startTime < pulseWidth) {
-//     // This loop waits until 2400 microseconds have passed since startTime
-//   }
-
-//   // End the pulse
-//   digitalWrite(SERVO_PIN, LOW);
-//   // Note: at this point, the time elapsed is roughly equal to pulseWidth
-
-//   // Wait for the rest of the period to complete the 20ms cycle
-//   while (micros() - startTime < period) {
-//     // This loop waits until 20000 microseconds have passed since startTime
-//   }
-
-//   // The function will return here, right after the 20ms period has finished
-// }
 
 void leftMove(int moves){
     for (int i = 0; i < moves; i++){
